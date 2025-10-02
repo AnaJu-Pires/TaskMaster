@@ -1,0 +1,93 @@
+@startuml TaskMaster API
+
+!theme vibrant
+top to bottom direction
+
+skinparam package {
+  BackgroundColor<<Web>> LightBlue
+  BackgroundColor<<Service>> LightGreen
+  BackgroundColor<<Repository>> LightGoldenRodYellow
+  BackgroundColor<<Domain>> LightSalmon
+  BackgroundColor<<DTO>> LightGrey
+  BackgroundColor<<Exceptions>> Pink
+}
+
+
+package "Web (API Layer)" {
+  class TarefaController {
+    + criar(dto): ResponseEntity
+    + listar(pageable): ResponseEntity
+    + atualizar(id, dto): ResponseEntity
+    + deletar(id): ResponseEntity
+  }
+
+  class RestExceptionHandler {
+    + handleResourceNotFound(ex)
+    + handleBusinessRuleException(ex)
+  }
+}
+
+package "Service (Business Logic)" as Service{
+  interface TarefaService {
+    + criar(dto): TarefaResponseDTO
+    + listar(pageable): Page<TarefaResponseDTO>
+    + atualizar(id, dto): TarefaResponseDTO
+    + deletar(id): void
+  }
+}
+
+package "Repository (Data Access)"{
+  interface TarefaRepository <<extends JpaRepository<Tarefa, Long>>> {
+    + findByCategoria(categoria, pageable): Page<Tarefa>
+  }
+}
+
+
+package "Domain (Entities)"{
+'Usuario é uma classe opc'
+  class Usuario {
+    + id: Long
+    + nome: String
+  }
+
+  class Tarefa {
+    + id: Long
+    + titulo: String
+    + status: StatusTarefa
+  }
+
+  enum StatusTarefa {
+    PENDENTE
+    CONCLUIDA
+  }
+}
+
+package "DTOs" as DTO{
+  class TarefaRequestDTO
+  class TarefaResponseDTO
+  class TarefaPatchDTO
+}
+
+package "Exceptions" as Exceptions{
+  class ResourceNotFoundException
+  class BusinessRuleException
+}
+
+
+TarefaController ..> TarefaService
+TarefaService ..> TarefaRepository
+TarefaRepository ..> Tarefa
+
+Usuario "1" -- "0..*" Tarefa
+Tarefa *-- StatusTarefa
+
+TarefaController ..> DTO
+Service ..> DTO
+
+TarefaService ..> Exceptions : "<<lança>>"
+RestExceptionHandler ..> Exceptions : "<<trata>>"
+
+
+
+
+@enduml

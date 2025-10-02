@@ -1,0 +1,26 @@
+@startuml TaskMaster
+left to right direction
+
+actor "Usuário da API" as user
+
+package "API TaskMaster" {
+  usecase "Criar Tarefa" as UC1
+  usecase "Atualizar Tarefa" as UC2
+  usecase "Excluir Tarefa" as UC3
+  usecase "Listar Tarefas" as UC4
+  usecase "Filtrar por Categoria" as UC5
+  usecase "Paginar e Ordenar Tarefas" as UC6
+}
+
+' Casos de uso do Épico 1
+user --> UC1
+user --> UC2
+user --> UC3
+
+' Casos de uso do Épico 2
+user --> UC4
+UC4 <.. UC5 : <<extend>>
+UC4 <.. UC6 : <<extend>>
+
+@enduml
+
