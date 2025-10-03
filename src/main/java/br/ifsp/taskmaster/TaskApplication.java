@@ -12,12 +12,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * a aplicação.
  */
 @SpringBootApplication
-public class ContactsApplication {
+public class TaskApplication {
 
     public static void main(String[] args) {
         // Método main: ponto de entrada de uma aplicação Java.
         // SpringApplication.run() inicia a aplicação Spring Boot.
-        SpringApplication.run(ContactsApplication.class, args);
+        SpringApplication.run(TaskApplication.class, args);
     }
 
 }
